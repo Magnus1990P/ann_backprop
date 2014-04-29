@@ -1,0 +1,94 @@
+\chapter{Results}
+
+\section{Learning set 1-10}
+The following tables shows the results from running our trainer and the output
+classifier at 100.000 epochs using either the first 10 images as training set or
+the last 10 images of each character as training set.
+
+Then the results was gathered from the test program after running both the first
+ten and last ten image sets against each of the two different stored neural
+networks.
+
+\subsection{Set 1-10 - Same Set Test}
+\input{chapters/tableA}
+\input{chapters/dtaA}
+\caption{Average performance for ANN trained with set 1-10 and ran with 1-10}
+\label{tab:dtaA}
+\end{longtable}
+
+\subsection{Set 11-20}
+\input{chapters/tableA}
+\input{chapters/dtaB}
+\caption{Average performance for ANN trained with set 1-10 and ran with 11-20}
+\label{tab:dtaB}
+\end{longtable}
+
+
+\section{Learning Set 11-20}
+\subsection{Set 1-10}
+
+\input{chapters/tableA}
+\input{chapters/dtaC}
+\caption{Average performance for ANN trained with set 11-20 and ran with 1-10}
+\label{tab:dtaC}
+\end{longtable}
+
+\subsection{Set 11-20 - Same Set Test}
+\input{chapters/tableA}
+\input{chapters/dtaD}
+\caption{Average performance for ANN trained with set 11-20 and ran with 11-20}
+\label{tab:dtaD}
+\end{longtable}
+
+
+\section{Identification rate - Set 1-10}
+The following tables shows out of x image sets ran through the network was
+recognised as a character with 50\% or more reliability.
+
+\subsection{Set 1-10 - Same Set Test}
+\input{chapters/tableB}
+\input{chapters/dtaA_IDS}
+\caption{Identificaiton rate of ANN trained with set 1-10 and ran with set 1-10}
+\label{tab:dtaA_ID}
+\end{longtable}
+
+\subsection{Set 11-20 - Same Set Test}
+\input{chapters/tableB}
+\input{chapters/dtaB_IDS}
+\caption{Identificaiton rate of ANN trained with set 1-10 and ran with set 11-20}
+\label{tab:dtaB_ID}
+\end{longtable}
+
+
+\section{Identification rate - Set 11-20}
+
+\subsection{Set 1-10}
+\input{chapters/tableB}
+\input{chapters/dtaC_IDS}
+\caption{Identificaiton rate of ANN trained with set 11-20 and run with set 1-10}
+\label{tab:dtaC_ID}
+\end{longtable}
+
+
+\subsection{Set 11-20 - Same Set Test}
+\input{chapters/tableB}
+\input{chapters/dtaD_IDS}
+\caption{Identificaiton rate of ANN trained with set 11-20 and run with set 11-20}
+\label{tab:dtaD_ID}
+\end{longtable}
+
+
+\section{Learning mixed set and testing against entire dataset}
+\input{chapters/tableA}
+\input{chapters/dta_bi_AVG}
+\caption{Average performance for ANN trained with mixed set and ran with 1-20}
+\label{tab:dtabiAVG}
+\end{longtable}
+
+
+\input{chapters/tableB}
+\input{chapters/dta_bi_IDS}
+\caption{Identificaiton rate of ANN trained with mixed set and run with set 1-20}
+\label{tab:dtabiID}
+\end{longtable}
+

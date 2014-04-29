@@ -1,0 +1,87 @@
+\chapter{Image Data}
+
+\section{Image Set}
+The images we had to classify consisted of images representing the 26 upper case
+characters A to Z. For each character there was a set of 20 images with minute
+differences in appearance.
+
+De images is in the form of grayscale images which uses the JPEG compression
+method for storage and file format. Which means that they have a specific
+compression algorithm, and file format.
+
+Even though all images are the size 30x30 pixels, they will all have different
+sizes because of the compression algorithm.  This means that we have to read
+images using an image library for C++ or pre-convert the images into a specific
+file format.
+
+
+\section{Conversion}
+To read the images in the software(C++) we tried different libraries which had
+image reading capabilities. Reading them as plain binary files would'nt have
+worked since they have embeded metadata and are compressed with the JPEG format.
+
+Because of this we tried ImageMagick and OpenCV, but neither worked with any
+ease so we decided to use Python to convert them into a play text file with the
+images pixel values as text data.
+
+So by creating the script to convert images, see appendix
+\ref{code:imgConverter}, we were left with a single file holding one informative
+line with which character was depicted in the set and the output target values.
+This is then followed by 20 lines, each holding 100 decimal values depicting the
+pixel values of the image.
+
+The script will open the pictures in ascending order starting with the images
+dipicting As, then Bs and so on, until Z. And for each of these characters it
+will read its 20 images straight away.
+
+Once it has loaded the image, using Python Image Library(PIL), it will go
+through a 10x10 array which will create the new picture. Then it will pick out a
+3x3 subset of the image, see figure \ref{fig:imgSubset}, and average its value.
+Then it will add it to a list for printing. It also adds it to a new 30x30 image
+that depicts the scaled doen version for comparison, though it is still in
+30x30px and the image data is only 10x10 scale..
+
+
+
+\subsection{Data Verification}
+To verify that the converted images was in fact correctly created, we took two
+approaches. First as well as grabbing the average value of the 3x3 subsets we
+created a scaled down picture set of the converted data. This served as a visual
+verification of our data conversion.  The second verification method was to
+create a small Python script, see listing \ref{code:imgDisp} , that read the
+data from our converted file and displayed the images as a 10x10 array of
+symbols in the console.
+
+\section{In software}
+Since we decided to pre-convert the images into data files as described above we
+needed a custom datastructure to hold the data in memory while running the
+program.  We created the following class which creates a long list of ''Data''
+objects where each objects contains the data for one image.
+
+In the program there are two global variable directly linked to the Data
+structure. The global variable ''curTarget'' and ''inData'' which holds the
+current array of target values, and the current Data object which holds the
+needed image data.
+
+\subsection{Data structure}
+We've depicted the data structure in the UML figure \ref{fig:uml_data}.
+\begin{description}
+\item[fasit:]		This holds which character the image data represents, in upper
+	case ASCII letters between A and Z.
+
+\item[target:]	This is a pointer to an integer array which will hold the target
+	values.  This is used when pushing it through the network to decide hwo much
+	each output node is off target. The array size is the same as the number of
+	output \gls{perceptron}s.
+
+\item[values:]	This is a pointer to a float array, which holds all of the input
+	values for the input layer.  This is used to set the initial values of the
+	input layer which then is transformed with an activation function.  The size
+	of the array is the number of input \gls{perceptron}s.
+
+\item[next:]		This is a pointer to the next item in the list of Data objects.
+	It is used for grabbing the next object in the list to perform some actions
+	on.
+\end{description}
+
+

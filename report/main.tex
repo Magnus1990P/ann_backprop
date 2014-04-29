@@ -1,0 +1,30 @@
+%% Languages: norsk				
+%%						english			
+%% Styles:		twoside, 		The margins will differ dependent on right/left pages
+%%						openright		The first page is a "right" page
+%% indexes:		listings		Show figure list, table list
+%%						glossary		Show glossary and abbreviation list
+%%						todo				Show list of todo-notes in documents
+%%						bib					Create bibliographt
+%%						%
+\documentclass[ english, listings, glossary ]{gucreport}
+\input{gucreport}
+
+\begin{document}
+	\input{glossary}
+	\makefrontpages
+	\tableofcontents
+	
+	%% Chapters for the text
+	\input{chapters/implementation}
+	\input{chapters/data}
+	\input{chapters/network}
+	\input{chapters/backprop}
+	\input{chapters/training}
+	\input{chapters/results}
+	\input{chapters/performance}
+	%\input{chapters/}
+
+	\makebib		%%lists of figures, codes, tables, glossary, etc
+\end{document}
+

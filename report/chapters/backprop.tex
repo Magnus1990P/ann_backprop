@@ -1,0 +1,122 @@
+\chapter{Backpropagation Algorithm} \label{chp:backprop}
+
+\section{Input propagation}
+Once the all input nodes has received their initial input value between 0 and
+255. We performa a custom calculation to reduce this value. We tried the sigmoid
+function, but it returned too many ones since everything above 13 becomes 1.
+
+We have tried a couple of different functions whichs is listed below.
+\begin{itemize}
+	\item $O_{(net)} = (net \div 128) - 1$, this function creates a value between -1 and +1
+		relative to its original value.  The value makes classification hard since
+		large differences in original values will have small differences here.
+	\item $O_{(net)} = ( (net<200)  ?  1 : 0 )$, this function says that if the
+		value of the pixel is below 200 the output value should be considered as 1.
+		This makes all dark areas classified as 1 and all light areas classified as
+		0. We've tried different variations of this, but 200 is an okay value.
+	\item $O_{(net)} = 1 \div ( 1 + e^{-net} )$, this sigmoid function yields
+		almost all ones as output because after a given height it will allways yield
+		1 as the output.
+\end{itemize}
+
+After calculation the first output value we go through each node in the layer
+and call the pushForward method that goes through the nodes weight list and
+updates the linked nodes input value by appending the output value multiplied by
+the weight of the synapse.
+
+When this is done we call the calcOutput method of the newly updated layer,
+which in return will calculate the output using the sigmoid function.
+
+These to steps of pushForward to the next layer and the calculating the next
+layers new output is done for all layers until it has calculated the output for
+the output layer.
+
+Once this is finished the next step is to calculate the errors.
+
+\section{Errors}
+\subsection{Offset from target}
+To validate that the output we receive is within the allowed offset from the
+target we calculate offset from target. If this is within the threshold we set
+the converged state of the node to true. This signify that the node has reached
+the level of optimization we feel is nessecary.
+
+\subsection{Output Error}
+Along with the offset we calculatet he output error. This is the error value we
+use during weight correction later on.  The error for the output layer is
+calculated using the following function for each of the output nodes.
+
+{\large$\delta_i=(T_i-O_i)*O_i*(1-O_i)$}
+\begin{itemize}
+\item $\delta_i$	is the error for the current node
+\item $T_i$				is the target relative to the current node
+\item $O_i$					is the output of for the current node
+\end{itemize}
+
+\subsection{Hidden layer errors}
+For the hidden layers we have to calculate the errors in a different way. This
+method is used for all the hidden layers.  First one has to summarize the
+weighted errors of all connected nodes, which is to take error in the end node
+and multiply it by the weight of the synapse.
+
+The following function is used to calculate the error for the hidden layer.
+
+{\large$\delta_{i}=O_i*((1-O_i)*\Sigma{(\delta_k*\omega_n)})$}
+\begin{itemize}
+\item $\delta_{i}$ 	The error for current node
+\item $O_i$					Output from current node 	
+\item $\delta_k$		The error in the node from next layer
+\item $\omega_n$		The weight of the link to the node in the next layer
+\item $\Sigma{(\delta_k * \omega_n)}$	The weighted sum of the errors of
+	connected nodes
+\end{itemize}
+
+
+\section{Weight changes}
+\subsection{Main update}
+The weights are updated from the last hidden layer and to the first layer, going
+one layer at the time.  The formula for how much the weight is to change is the
+following. Where i is the node on the current layer and k is the node on the
+layer above.   It also has to take into account the previous change of that
+occured, which is the momentum. The momentum of the previous change is added to
+the current change.
+
+{\large$\Delta\omega_{i,k}=\eta*\delta_k*O_i+(\alpha*\Delta\omega_{prev})$}
+\begin{itemize}
+\item	$_i$	-- This is the id of the node on the current layer.
+\item	$_k$	-- This is the id of the node on the layer above, which the synapse is
+	linking to.
+\item	$\Delta\omega_{i,k}$	-- This is the total value to change for the synapse in
+	question.
+\item	$\eta$	-- Learning rate, a fixed value of how much of the error is to be
+	corrected.
+\item	$\delta_k$	-- The error of the node the synapse is linking to.
+\item	$O_i$			-- The output for the current node.
+\item	$\alpha$	-- Momentum, a fixed value of how much of the previous change the
+	current synapses weight should also be changed with.
+\item	$\Delta\omega_{prev}$ -- The previous weight change of the synapse.
+\end{itemize}
+
+
+\subsection{The Next Steps}
+When all weights/synapses has been updated, the next step is to clean house. To
+avoid any erros due to residual data we go through all nodes and resets their
+non-persistant data, which is error, input, convergence and output.
+
+This is to have correct input values since they are appended to the original
+value.
+
+Then the next step is to choose a new data set to learn from. The dataset should
+be a completely different, otherwise the network will learn to identify the one
+dataset and then the other, forgetting the first in the meantime.
+
+Because of this conundrum we are moving throug the dataset as follows. Say we
+have 10 images per character we are going to learn.  We then start with A1, then
+B1, C1, and so on until Z1. Then we increment the image set counter and reset
+the character set.  Then we learn A2, B2, C2, ...., Z2. and so on until we reach
+Zn.  Then if the network has converged we can stop otherwise we restart and
+train the network on the data set once more.
+
+Usually we train the data set around 20.000 times for the entire data set of
+input values. from A1 to Zn.
+
+
