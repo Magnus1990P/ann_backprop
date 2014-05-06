@@ -1,35 +1,35 @@
 //Written by Magnus Øverbø - 2014
 
 //Includes
-#include <stdio.h>									//Standard library for some things
-#include <iostream>									//Standard input output cin/cout
-#include <fstream>									//Used for file streams
-#include <cstdlib>									//Used for rand()
-#include <cmath>										//Used for math. abs(), exp()
-#include <iomanip>									//align text
-using namespace std;								//Namespace to use
+#include <stdio.h>										//Standard library for some things
+#include <iostream>										//Standard input output cin/cout
+#include <fstream>										//Used for file streams
+#include <cstdlib>										//Used for rand()
+#include <cmath>											//Used for math. abs(), exp()
+#include <iomanip>										//align text
+using namespace std;									//Namespace to use
 
 // Global values
-const int 	NUM_OF_LETTER		= 26;		//Number of different charachters in set
-const int 	SETS_PER_LETTER	= 20;		//Number of different images per character
-const int 	NUM_OF_PIXELS		= 100;	//Number of input values(pixels)
-//const int 	NUM_OF_OUTPUTS	= 5;		//binary input
-const int 	NUM_OF_OUTPUTS	= 26;		//char output
-const int 	NUM_OF_LAYERS		= 1;		//Hidden layers
-const int 	NUM_IN_HIDDEN		= 10;		//Number of nodes in each hidden layer
-const float	LEARNING_RATE		= 0.7;	//The amount to learn for current change
-const float	MOMENTUM				= 0.03;	//Amount to learn from previous weight change
-const float	THRESHOLD				= 0.005;//Error treshold of output values
+const int 	NUM_OF_LETTER		= 26;			//Number of different charachters in set
+const int 	SETS_PER_LETTER	= 20;			//Number of different images per character
+const int 	NUM_OF_PIXELS		= 100;		//Number of input values(pixels)
+//const int 	NUM_OF_OUTPUTS	= 5;			//binary input
+const int 	NUM_OF_OUTPUTS	= 26;			//char output
+const int 	NUM_OF_LAYERS		= 1;			//Hidden layers
+const int 	NUM_IN_HIDDEN		= 10;			//Number of nodes in each hidden layer
+const float	LEARNING_RATE		= 0.7;		//The amount to learn for current change
+const float	MOMENTUM				= 0.03;		//Amount to learn from last weight change
+const float	THRESHOLD				= 0.005;	//Error treshold of output values
 
-class Node;					//Pre declaration of Node class
+class Node;												//Pre declaration of Node class
 
 class Weight{
 	private:
-		int			id;			//	identifier
-		Node*		to;			//	next layer the weight links to
-		float		weight;	//	the current weight
-		float		change;	//	the last delta change
-		Weight*	next;		//	the next Weight element in list
+		int			id;										//identifier
+		Node*		to;										//next layer the weight links to
+		float		weight;								//the current weight
+		float		change;								//the last delta change
+		Weight*	next;									//the next Weight element in list
 	public:
 		Weight(){};
 		Weight( int, float, Node* );
@@ -50,13 +50,13 @@ class Weight{
 
 class Node{
 	private:
-		int 		id;					//	the identifier
-		float		input;			//	the input value as decimal
-		float		output;			//	the output value as decimal
-		float		error;			//	the current error of the node as decimal
-		Weight*	weight;			//	the link to the Weight list to next layer
-		Node* 	next;				//	next Node in the list
-		bool		convergence;//	If the Node is within the treshold
+		int 		id;											//the identifier
+		float		input;									//the input value as decimal
+		float		output;									//the output value as decimal
+		float		error;									//the current error of the node as decimal
+		Weight*	weight;									//the link to the Weight list to next layer
+		Node* 	next;										//next Node in the list
+		bool		convergence;						//If the Node is within the treshold
 	public:
 		Node( ){};
 		Node( int );
@@ -89,10 +89,10 @@ class Node{
 
 class Data{
 	private:
-		char	fasit;		//	The identifying type of the Data
-		int		*target;	//	Int array of 0/1 values representing the target
-		float *values;	//	float array of values representing the 100 pixels
-		Data*	next;			//	link to next Data element in the list
+		char	fasit;						//The identifying type of the Data
+		int		*target;					//Int array of 0/1 values representing the target
+		float *values;					//float array of values representing the 100 pixels
+		Data*	next;							//link to next Data element in the list
 
 	public:
 		Data(){};
@@ -109,12 +109,12 @@ class Data{
 		void 	loadData( char, int );
 };
 
-Node*		input;									//Ptr to input layer list
-Node*		hidden[NUM_OF_LAYERS];	//Array of ptrs to all hidden layers
-Node*		output;									//Ptr to the output layer list
-Data* 	dHead;									//Ptr to the head of Data list
-int*		curTarget;							//Ptr to the array specifying the current target
-Data*		inData;									//Ptr to the current input data element
+Node*		input;											//Ptr to input layer list
+Node*		hidden[NUM_OF_LAYERS];			//Array of ptrs to all hidden layers
+Node*		output;											//Ptr to the output layer list
+Data* 	dHead;											//Ptr to the head of Data list
+int*		curTarget;									//Ptr to the array for the current target
+Data*		inData;											//Ptr to the current input data element
 
 void		loadDataSet();							//Load dataset into Data objects from file
 void		displayDataSet();						//Displays the different datasets loaded
@@ -156,8 +156,9 @@ int main(){
 			cout << "\n";
 			output->display();						//Display output layer
 																		//Print some separator
-			cout << testChar << " " << testSet << " - TRAINING ROUND:   " << count << "\n";
-			cout <<	setw(93) << setfill('-') << "-\n" << setfill(' ');
+			cout	<< testChar << " " 	<< testSet 	<< " - TRAINING ROUND:   " 
+						<< count 		<< "\n"	<< setw(93) << setfill('-') << "-\n" 
+						<< setfill(' ');
 			saveANN();												//Save weights to file
 		}
 
@@ -189,9 +190,9 @@ int main(){
 	*	same for the next element.
 	**/
 void	Node::setInput(){
-	input		= inData->getValue( id );		//Set input to real pixel value 0-255
-	output	= (input > 200) ? 0 : 1;		//Calculate the value to a relative value
-	if( next != NULL )	next->setInput();//If next is a object call setInput
+	input		= inData->getValue( id );			//Set input to real pixel value 0-255
+	output	= (input > 200) ? 0 : 1;			//Calculate the value to a relative val
+	if( next != NULL )	next->setInput();	//If next is a object call setInput
 }
 
 /**
@@ -234,19 +235,19 @@ void	Node::write( ofstream& out){
 	**/
 void saveANN(){
 	ofstream out;
-	out.open("./savefile.net");				//Opens the file
-	if( out.is_open() ){							//If sucessful
-		out << NUM_OF_PIXELS	<< " "		//Number of input nodes
-				<< NUM_OF_OUTPUTS << " "		//Number of output nodes
-				<< NUM_OF_LAYERS	<< " "		//Number of hidden layers
-				<< NUM_IN_HIDDEN	<< "\n";	//Number of nodes in hidden layers
+	out.open("./savefile.net");					//Opens the file
+	if( out.is_open() ){								//If sucessful
+		out << NUM_OF_PIXELS	<< " "			//Number of input nodes
+				<< NUM_OF_OUTPUTS << " "			//Number of output nodes
+				<< NUM_OF_LAYERS	<< " "			//Number of hidden layers
+				<< NUM_IN_HIDDEN	<< "\n";		//Number of nodes in hidden layers
 			
-		input->write( out );						//Write input layer to file
+		input->write( out );							//Write input layer to file
 		for(int i=0; i<NUM_OF_LAYERS; i++)//Go through all hidedn layers
-			hidden[i]->write( out );			//Wiret the hidden layer to file
+			hidden[i]->write( out );				//Wiret the hidden layer to file
 
-		out.close();										//Close file
-	}																	//End of check if file is open
+		out.close();											//Close file
+	}																		//End of check if file is open
 }
 
 
@@ -295,11 +296,11 @@ bool 	treshold(){
 	*		Add the error multiplied by the weight of the link to the total.
 	**/
 float Weight::sumErrors(){
-	float sum = 0;
-	sum = weight * to->getError();
-	if( next != NULL )
-		sum += next->sumErrors();
-	return sum;
+	float sum = 0;										//Set a 0 value for the sum
+	sum = weight * to->getError();		//Calculate this weighted error
+	if( next != NULL )								//If next exists 
+		sum += next->sumErrors();				//Append the next error in chain to sum
+	return sum;												//Return the summed error
 }
 
 /**
@@ -371,11 +372,11 @@ void	Node::calcEndError( int index ){
 	* \brief	Calculate error for all layers
 	**/
 void calcError(){
-	output->calcEndError( 0 );						//Calc output error
-	for(int i=NUM_OF_LAYERS-1; i>=0; i--){//For all hidden layers, decending
-		hidden[i]->calcLayerError();				//Calculate error for hidden layer
-	}																			//end of hidden layer loop
-	input->calcLayerError();							//Calculate input layer error
+	output->calcEndError( 0 );							//Calc output error
+	for(int i=NUM_OF_LAYERS-1; i>=0; i--){	//For all hidden layers, decending
+		hidden[i]->calcLayerError();					//Calculate error for hidden layer
+	}																				//end of hidden layer loop
+	input->calcLayerError();								//Calculate input layer error
 }
 
 /** \author	20140416 - Magnus Øverbø
@@ -432,13 +433,13 @@ void	Node::calcOutput(){
 void pushForward(){
 	input->pushForward();				//Pushes the outputs of input layer to the next
 	
-	for( int i=0; i<NUM_OF_LAYERS; i++){//For all hidden layers
-		hidden[i]->calcOutput();					//Calculate output values for layer
-		hidden[i]->pushForward();					//Push output values to next layer
-	}																		//End of hidden layer loop
+	for( int i=0; i<NUM_OF_LAYERS; i++){	//For all hidden layers
+		hidden[i]->calcOutput();						//Calculate output values for layer
+		hidden[i]->pushForward();						//Push output values to next layer
+	}																			//End of hidden layer loop
 
-	output->calcOutput();								//Calculate output values for output
-	output->pushForward();							//Pushes output layer forward
+	output->calcOutput();									//Calculate output values for output
+	output->pushForward();								//Pushes output layer forward
 }
 
 
@@ -446,8 +447,8 @@ void pushForward(){
 	* \brief	Display values of the output targets
 	**/
 void	displayTarget(){
-	for( int i=0; i<NUM_OF_OUTPUTS; i++)//For all ints between 0 and global var
-		cout << curTarget[ i ] << " ";		//Print target int followed by space
+	for( int i=0; i<NUM_OF_OUTPUTS; i++)	//For all ints between 0 and global var
+		cout << curTarget[ i ] << " ";			//Print target int followed by space
 }
 
 /** \author	20140416 - Magnus Øverbø	
@@ -461,8 +462,8 @@ void Weight::display(){
 	cout << "\n     "	<< right	<< setw(3) 	<<	id 							//weight id
 			 << " [ "			<< right	<< setw(3)	<<	to->getId() 		//linked nodes id
 			 << "   "			<< left		<< setw(11) <<	weight					//weight value
-			 << "   " 		<< left		<< setw(11)	<<	to->getInput()	//linked node output value
-			 << "   " 		<< left		<< setw(11)	<<	to->getOutput()	//linked node output value
+			 << "   " 		<< left		<< setw(11)	<<	to->getInput()	//linked nodes in
+			 << "   " 		<< left		<< setw(11)	<<	to->getOutput()	// and output val
 			 << " ]";
 	if( next != NULL )	next->display();	//go to next weight and print it
 }
@@ -476,35 +477,33 @@ void Weight::display(){
 	*	element in the list
 	**/
 void Node::display(){
-	cout	<< ""					<< left		<< setw(5)  << id						//Id
-				<< "IN:"			<< right	<< setw(11) << input				//Input
-				<< "   OUT:" 	<< right	<< setw(13) << output 			//output
-				<< "   ERR:"	<< right	<< setw(13)	<< error				//error
-																														//offset from target
+	cout	<< ""					<< left		<< setw(5)  << id					//Id
+				<< "IN:"			<< right	<< setw(11) << input			//Input
+				<< "   OUT:" 	<< right	<< setw(13) << output 		//output
+				<< "   ERR:"	<< right	<< setw(13)	<< error			//error
+																													//offset from target
 				<< "   OFF:" 	<< right	<< setw(13) << (curTarget[ id ] - output)
 				<< "   CON: "	<< ((convergence) ? "true": "false" );//Converged or not
 	
 	if( weight != NULL ){																		//Informative message
 		cout << "\n     ### [ ###   weight        input         output      ]";
-		weight->display();	//prints the weights
+		weight->display();																		//prints the weights
 	}
 	cout << "\n";
-	if( next 	 != NULL )	next->display();		//If next display it
+	if( next 	 != NULL )	next->display();									//If next display it
 }
 
 /** \author	20140416 - Magnus Øverbø	
 	* \brief	Displays all layers and their information
 	**/
 void	display(){
-	input->display();							//print input layer
-	cout << "\n";
-	for( int i=0; i< NUM_OF_LAYERS; i++ ){//For all hidden layers
-		hidden[i]->display();				//print hidden layer
+	input->display();												//print input layer
+	cout << "\n";														
+	for( int i=0; i< NUM_OF_LAYERS; i++ ){	//For all hidden layers
+		hidden[i]->display();									//print hidden layer
 		cout << "\n\n";
 	}
-	cout << "\n";
-	output->display();						//Print output layer
-	cout << "\n";
+	cout << "\n";	output->display(); cout << "\n";//Print output layer
 }
 
 
@@ -548,17 +547,17 @@ void	Node::reset(){
 	output	= 0;
 	error		= 0;
 	convergence = false;
-	if( next != NULL ) next->reset();
+	if( next != NULL ) next->reset();	//Reset next node if exist
 };
 
 /** \author	20140416 - Magnus Øverbø	
 	* \brief	Clears the non-persistant data in all layers
 	**/
 void clearInput(){
-	input->reset();						//Reset the input layer
-	for( int i=0; i<NUM_OF_LAYERS; i++)//For all hidden layers
-		hidden[i]->reset();			//Reset the hidden layer
-	output->reset();					//Reset the output layers
+	input->reset();											//Reset the input layer
+	for( int i=0; i<NUM_OF_LAYERS; i++)	//For all hidden layers
+		hidden[i]->reset();								//Reset the hidden layer
+	output->reset();										//Reset the output layers
 }
 
 /** \author	20140416 - Magnus Øverbø	
@@ -569,7 +568,7 @@ void	findInput( char c, int i){
 	int		count		=	0;						//Counter to decide which to select
 	Data* curData = dHead;				//Temp ptr to hold the current dataSet
 		
-	clearInput();									//Clear input for all layers
+	clearInput();															//Clear input for all layers
 	while( curData != NULL && found != true){	//For all data sets
 		if( curData->getFasit() == c ){					//If desired character set
 																						//If correct set is found
@@ -578,10 +577,10 @@ void	findInput( char c, int i){
 				inData = curData;										//Set inData ptr to current set
 				curTarget = curData->getTarget( );	//Set target ptr to current target
 			}																			//End found correct dataset
-			count++;											//increment counter
-		}																//end character found if
-		curData = curData->getNext( );	//move to next data set
-	}//End of data set loop
+			count++;															//increment counter
+		}																				//end character found if
+		curData = curData->getNext( );					//move to next data set
+	}																					//End of data set loop
 }
 
 
@@ -629,7 +628,7 @@ void networkSetup(){
 	Node	*tNode, *nNode;		//Temp ptrs for holding the element and new instances
 	output	= new Node();		//Create foo element for output ptr
 	input 	= new Node();		//Create foo element for input ptr
-	tNode = input;					//Set tNode to point to input layer
+	tNode 	= input;				//Set tNode to point to input layer
 	
 	for(int i=0; i<NUM_OF_PIXELS; i++){	//For all nodes in input layer
 		nNode	= new Node( i );						//Create new node with auto incremented id
@@ -730,10 +729,10 @@ void loadDataSet(){
 	*	values. THe next ptr is zeroed out
 	**/
 Data::Data( char tF, int *tT, float *tV ){
-	fasit		= tF;
-	target	= tT;
-	values	= tV;
-	next		= NULL;
+	fasit			= tF;
+	target		= tT;
+	values		= tV;
+	next			= NULL;
 }
 
 /** \author	20140416 - Magnus Øverbø	
@@ -744,12 +743,12 @@ Data::Data( char tF, int *tT, float *tV ){
 	* Specially when creating from input to output.
 	**/
 Node::Node( int tI ){
-	id	 		= tI;			//integer id
-	weight	= NULL;
-	input		= 0;
-	output	= 0;
-	error		= 0;
-	next		= NULL;
+	id	 			= tI;			//integer id
+	weight		= NULL;
+	input			= 0;
+	output		= 0;
+	error			= 0;
+	next			= NULL;
 }
 
 /** \author	20140416 - Magnus Øverbø	
@@ -760,12 +759,12 @@ Node::Node( int tI ){
 	*	variables.
 	**/
 Node::Node( int tI, Weight* tW ){
-	id	 		= tI;		//integer id
-	weight	= tW;		//list of weights
-	input		= 0;
-	output	= 0;
-	error		= 0;
-	next		= NULL;
+	id	 			= tI;		//integer id
+	weight		= tW;		//list of weights
+	input			= 0;
+	output		= 0;
+	error			= 0;
+	next			= NULL;
 }
 
 /** \author	20140416 - Magnus Øverbø	
@@ -774,13 +773,12 @@ Node::Node( int tI, Weight* tW ){
 	*	sets id, Node link and weight. Then set change and next to 0 and NULL.
 	**/
 Weight::Weight( int tI, float tW, Node* tN){
-		id		=	tI;
-		to		= tN;
-		weight=	tW;
-		change= 0.0;
-		next	= NULL;
+		id			=	tI;
+		to			= tN;
+		weight	=	tW;
+		change	= 0.0;
+		next		= NULL;
 }
-
 
 /** \author	20140416 - Magnus Øverbø	
 	* \brief	Set the next ptr to point to the specified Data item
